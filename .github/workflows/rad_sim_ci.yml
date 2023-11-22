@@ -53,8 +53,6 @@ jobs:
           - test-script: npu_test.sh # Don't run all the NPU tests in the same runner
             test: ""
         include:
-          - test-script: mlp_int8_test.sh
-            rtl: true
           - test-script: npu_test.sh
             test: std_gemv
           - test-script: npu_test.sh
@@ -79,7 +77,7 @@ jobs:
       run: ./.github/scripts/setup_system_c.sh -v ${{ env.SYSTEMC_VERSION }}
 
     - name: Setup Verilator IFF test requires it
-      if: matrix.rtl == 'true'
+      if: matrix.test-script == 'mlp_int8_test.sh'
       run: ./.github/scripts/setup_verilator.sh
 
     - name: Setup Mambaforge (Conda)
