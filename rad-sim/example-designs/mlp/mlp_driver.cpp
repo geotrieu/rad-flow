@@ -126,12 +126,16 @@ void mlp_driver::sink() {
     }
     wait();
   }
-  if (mistake) std::cout << "FAILURE - Some outputs NOT matching!" << std::endl;
+  if (mistake) {
+    std::cout << "FAILURE - Some outputs NOT matching!" << std::endl;
+    radsim_design.ReportDesignFailure();
+  }
   else std::cout << "SUCCESS - All outputs are matching!" << std::endl;
 
   end_cycle = GetSimulationCycle(1.0);
   std::cout << "Simulation Cycles = " << end_cycle - start_cycle << std::endl;
   NoCTransactionTelemetry::DumpStatsToFile("stats.csv");
+  NoCFlitTelemetry::DumpNoCFlitTracesToFile("flit_traces.csv");
 
   std::vector<double> aggregate_bandwidths = NoCTransactionTelemetry::DumpTrafficFlows("traffic_flows", 
     end_cycle - start_cycle, radsim_design.GetNodeModuleNames());
